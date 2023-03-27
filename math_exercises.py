@@ -137,7 +137,7 @@ def gen_divide_type0():
 
 nbr_per_exercises = 80
 nbr_per_file = 30
-nbr_file = 20
+nbr_file = 1
 
 total_exercises = nbr_per_exercises * nbr_per_file * nbr_file
 
@@ -156,11 +156,11 @@ for gen, nbr in gens.items():
     all_exercises.extend([gen() for i in range(nbr)])
 
 def do(filename):
-    with open(filename, 'wb') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(rtf_header)
         for page in range(1, nbr_per_file):
             f.write(rtf_page_header_template % page)
-            for i in range(0, nbr_per_exercises / 4):
+            for i in range(0, nbr_per_exercises // 4):
                 spaces = ' ' * 5
                 exercises_a_line = [random.choice(all_exercises) for _ in range(4)]
                 a_line = spaces.join(exercises_a_line)
