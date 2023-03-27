@@ -1,38 +1,11 @@
 import random
 import operator
 
-rtf_header = r'''{\rtf1\ansi\ansicpg936\deff0{\fonttbl{\f0\fnil Courier New;}{\f1\fnil\fcharset134 SimSun;}{\f2\fnil SimSun;}}
-{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1
-'''
-
-
-rtf_tail = r'''
-}
-'''
-
-
-rtf_page_header_template = r'''\pard\lang2052\f1\sa200\sl376\slmult1\qc\'bf\'da\'cb\'e3\'c1\'b7\'cf\'b0 \lang1033\f2 %d\f3\par
-\pard\sa200\sl426\slmult1\lang9\f0\fs26
-'''
-
-
-rtf_page_tail = r'''\par
-\lang2052\f1\'d0\'d5\'c3\'fb\'a3\'ba             \'d7\'f6\'b6\'d4\'a3\'ba             \'d3\'c3\'ca\'b1\'a3\'ba    \'b7\'d6    \'c3\'eb\lang1033\f2\par
-\page
-'''
-
-rtf_a_line_template = r'%s  \line '
-
-
-rtf_page_break = r'\page '
-
-
 ops = {
     '+': operator.__add__,
     '-': operator.__sub__,
     '*': operator.__mul__
 }
-
 
 def gen_type0():
     """
@@ -135,6 +108,43 @@ def gen_divide_type0():
     prod = random.randrange( 2, 10) * b
     return '%2d / %2d = '  % (prod, b)
 
+def output_to_rtf_file(filename: str):
+    rtf_header = r'''{\rtf1\ansi\ansicpg936\deff0{\fonttbl{\f0\fnil Courier New;}{\f1\fnil\fcharset134 SimSun;}{\f2\fnil SimSun;}}
+{\*\generator Msftedit 5.41.21.2510;}\viewkind4\uc1
+'''
+
+    rtf_tail = r'''
+}
+'''
+
+    rtf_page_header_template = r'''\pard\lang2052\f1\sa200\sl376\slmult1\qc\'bf\'da\'cb\'e3\'c1\'b7\'cf\'b0 \lang1033\f2 %d\f3\par
+\pard\sa200\sl426\slmult1\lang9\f0\fs26
+'''
+
+    rtf_page_tail = r'''\par
+\lang2052\f1\'d0\'d5\'c3\'fb\'a3\'ba             \'d7\'f6\'b6\'d4\'a3\'ba             \'d3\'c3\'ca\'b1\'a3\'ba    \'b7\'d6    \'c3\'eb\lang1033\f2\par
+\page
+'''
+    rtf_a_line_template = r'%s  \line '
+
+    # rtf_page_break = r'\page '
+
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(rtf_header)
+        for page in range(1, nbr_per_file):
+            f.write(rtf_page_header_template % page)
+            for i in range(0, nbr_per_exercises // 4):
+                spaces = ' ' * 5
+                exercises_a_line = [random.choice(all_exercises) for _ in range(4)]
+                a_line = spaces.join(exercises_a_line)
+                output_line = rtf_a_line_template % a_line
+                output_line = output_line.replace('*', r"\'d7")
+                output_line = output_line.replace('/', r"\'f7")
+                f.write(output_line)
+            f.write(rtf_page_tail)
+
+        f.write(rtf_tail)
+
 nbr_per_exercises = 80
 nbr_per_file = 30
 nbr_file = 1
@@ -155,22 +165,23 @@ all_exercises = []
 for gen, nbr in gens.items():
     all_exercises.extend([gen() for i in range(nbr)])
 
-def do(filename):
-    with open(filename, 'w', encoding='utf-8') as f:
-        f.write(rtf_header)
-        for page in range(1, nbr_per_file):
-            f.write(rtf_page_header_template % page)
-            for i in range(0, nbr_per_exercises // 4):
-                spaces = ' ' * 5
-                exercises_a_line = [random.choice(all_exercises) for _ in range(4)]
-                a_line = spaces.join(exercises_a_line)
-                output_line = rtf_a_line_template % a_line
-                output_line = output_line.replace('*', r"\'d7")
-                output_line = output_line.replace('/', r"\'f7")
-                f.write(output_line)
-            f.write(rtf_page_tail)
+# def do(filename):
+#     with open(filename, 'w', encoding='utf-8') as f:
+#         f.write(rtf_header)
+#         for page in range(1, nbr_per_file):
+#             f.write(rtf_page_header_template % page)
+#             for i in range(0, nbr_per_exercises // 4):
+#                 spaces = ' ' * 5
+#                 exercises_a_line = [random.choice(all_exercises) for _ in range(4)]
+#                 a_line = spaces.join(exercises_a_line)
+#                 output_line = rtf_a_line_template % a_line
+#                 output_line = output_line.replace('*', r"\'d7")
+#                 output_line = output_line.replace('/', r"\'f7")
+#                 f.write(output_line)
+#             f.write(rtf_page_tail)
 
-        f.write(rtf_tail)
+#         f.write(rtf_tail)
 
 for i in range(1, nbr_file + 1):
-    do(r'calculation_%d.rtf' % i)
+    # do(r'calculation_%d.rtf' % i)
+    output_to_rtf_file(f'test.rtf')
