@@ -1,11 +1,17 @@
 import random
 
+MIN_VALUE = 10
+MAX_VALUE = 100
+SPACE_BETWEEN_QUESTIONS = 24
+QUESTIONS_PER_LINE = 4
+LINES_PER_PAGE = 7
+
 def generate_question():
     operators = ['+', '-', '×', '÷']
     operators = ['+', '-']
 
-    a = random.randint(10, 100)
-    b = random.randint(10, 100)
+    a = random.randint(MIN_VALUE, MAX_VALUE)
+    b = random.randint(MIN_VALUE, MAX_VALUE)
     operator = random.choice(operators)
 
     if operator == '÷':
@@ -15,27 +21,25 @@ def generate_question():
 
     question = f"{a} {operator} {b} = "
     return question
-
-def generate_exercise_page(page_num, questions_per_line, lines_per_page):
-    # page = f"第 {page_num} 页\n\n"
+    
+def generate_exercise_page(questions_per_line, lines_per_page):
     page = ""
 
     for line in range(lines_per_page):
         questions_line = ""
-        for q in range(questions_per_line):
+        for question_num in range(questions_per_line):
             question = generate_question()
-            questions_line += f"{question:<24}"
-        page += questions_line + "\n\n\n\n\n\n"
+            questions_line += f"{question:<{SPACE_BETWEEN_QUESTIONS}}"
+        page += questions_line + "\n" * 6
 
     return page
 
+
 def main():
     total_pages = 10
-    questions_per_line = 4
-    lines_per_page = 7
 
     for i in range(1, total_pages + 1):
-        page = generate_exercise_page(i, questions_per_line, lines_per_page)
+        page = generate_exercise_page(QUESTIONS_PER_LINE, LINES_PER_PAGE)
         print(page)
         if i != total_pages:
             print("\f")
