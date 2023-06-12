@@ -1,0 +1,5 @@
+1. python3 math_v3.py > result.txt
+open result.txt with Pages
+select all and set font to 'Courier New' and font size to 15
+set 间距 to fixed value 13 points
+页面设置设置为A4
